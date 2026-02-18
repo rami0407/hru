@@ -96,6 +96,27 @@ body {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.admin-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.admin-link:hover {
+    background: white;
+    color: var(--primary-color);
+    transform: rotate(90deg);
+}
+
 .main-header h1 {
     font-size: 3rem;
     margin: 0;
