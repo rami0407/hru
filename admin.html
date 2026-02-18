@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحليلات - كيف حالك؟</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            text-align: right;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            color: var(--primary-color);
+        }
+    </style>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="mesh-gradient-bg" style="align-items: flex-start; height: auto; min-height: 100vh;">
+        <div class="admin-container">
+            <header class="main-header" style="margin-bottom: 3rem;">
+                <h1>لوحة تحكم تحليل المشاعر</h1>
+                <p>ملخص حالة الطلاب اليوم</p>
+                <a href="index.html" style="color: white; text-decoration: underline;">العودة للتطبيق الرئيسي</a>
+            </header>
+
+            <div class="dashboard-grid">
+                <!-- Stat Card -->
+                <div class="card stat-card">
+                    <h3>إجمالي المشاركات</h3>
+                    <div class="stat-value" id="totalCount">0</div>
+                    <p>طالب شارك اليوم</p>
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="card">
+                    <h3>توزيع المشاعر</h3>
+                    <div class="chart-container">
+                        <canvas id="moodPieChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card" style="grid-column: 1 / -1;">
+                    <h3>آخر المشاركات</h3>
+                    <table id="recentTable">
+                        <thead>
+                            <tr>
+                                <th>الشعور</th>
+                                <th>الوقت</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+
+</html>
