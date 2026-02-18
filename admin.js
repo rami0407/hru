@@ -1,6 +1,6 @@
 // Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, orderBy, where, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Firebase Configuration (Same as main app)
 const firebaseConfig = {
@@ -16,6 +16,26 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// DOM Elements
+const dateFilter = document.getElementById('dateFilter');
+const showAllBtn = document.getElementById('showAllBtn');
+const currentViewLabel = document.getElementById('currentViewLabel');
+
+// State
+let chartInstance = null;
+
+// Event Listeners
+dateFilter.addEventListener('change', (e) => {
+    if (e.target.value) {
+        fetchAnalytics(new Date(e.target.value));
+    }
+});
+
+showAllBtn.addEventListener('click', () => {
+    dateFilter.value = ''; // Clear date picker
+    fetchAnalytics(null); // Fetch all
+});
 
 const moodLabels = {
     'happy': 'سعيد',
@@ -43,9 +63,33 @@ const moodColors = {
     'scared': '#1e40af'
 };
 
-async function fetchAnalytics() {
+async function fetchAnalytics(date = null) { // Changed signature to accept date, default to null for all
     try {
-        const q = query(collection(db, "student_moods"), orderBy("timestamp", "desc"), limit(100));
+        let q;
+        const moodsRef = collection(db, "student_moods");
+
+        if (date) {
+            // Filter by specific date (start of day to end of day)
+            const startOfDay = new Date(date);
+            startOfDay.setHours(0, 0, 0, 0);
+
+            const endOfDay = new Date(date);
+            endOfDay.setHours(23, 59, 59, 999);
+
+            q = query(
+                moodsRef,
+                where("timestamp", ">=", Timestamp.fromDate(startOfDay)),
+                where("timestamp", "<=", Timestamp.fromDate(endOfDay)),
+                orderBy("timestamp", "desc")
+            );
+
+            currentViewLabel.textContent = `عرض بيانات: ${date.toLocaleDateString('ar-EG')}`;
+        } else {
+            // Show All Time
+            q = query(moodsRef, orderBy("timestamp", "desc"));
+            currentViewLabel.textContent = "عرض كل البيانات";
+        }
+
         const querySnapshot = await getDocs(q);
 
         const data = [];
@@ -59,6 +103,10 @@ async function fetchAnalytics() {
         updateDashboard(data);
     } catch (e) {
         console.error("Error fetching documents: ", e);
+        // If sorting/filtering fails (likely due to missing index), fallback:
+        if (e.message.includes("index")) {
+            alert("مطلوب فهرس (Index) في Firebase لهذا الاستعلام. يرجى مراجعة Console.");
+        }
     }
 }
 
@@ -115,15 +163,18 @@ function getMoodTypeLabel(type) {
 function renderPieChart(counts) {
     const ctx = document.getElementById('moodPieChart').getContext('2d');
 
+    // Destroy previous chart if exists
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
+
     // Generate colors array based on labels
-    // We need to map back from label to ID to get color, or just use random colors
-    // Simpler approach: define a palette
     const backgroundColors = [
         '#fcd34d', '#fbbf24', '#f87171', '#34d399', '#60a5fa',
         '#818cf8', '#a78bfa', '#ef4444', '#1e40af', '#9ca3af'
     ];
 
-    new Chart(ctx, {
+    chartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: Object.keys(counts),
@@ -148,5 +199,8 @@ function renderPieChart(counts) {
     });
 }
 
-// Initial Fetch
-fetchAnalytics();
+// Set default date to today in UI
+dateFilter.valueAsDate = new Date();
+
+// Initial Fetch (Today)
+fetchAnalytics(new Date());

@@ -73,8 +73,19 @@
         <div class="admin-container">
             <header class="main-header" style="margin-bottom: 3rem;">
                 <h1>لوحة تحكم تحليل المشاعر</h1>
-                <p>ملخص حالة الطلاب اليوم</p>
-                <a href="index.html" style="color: white; text-decoration: underline;">العودة للتطبيق الرئيسي</a>
+                <p>ملخص حالة الطلاب</p>
+                <div class="filter-controls"
+                    style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                    <label for="dateFilter">اختر التاريخ:</label>
+                    <input type="date" id="dateFilter" style="padding: 0.5rem; border-radius: 5px; border: none;">
+                    <button id="showAllBtn"
+                        style="padding: 0.5rem 1rem; border-radius: 5px; border: none; background: white; color: var(--primary-color); cursor: pointer; font-weight: bold;">عرض
+                        الكل</button>
+                    <span id="currentViewLabel" style="color: white; font-weight: bold; margin-right: 1rem;"></span>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <a href="index.html" style="color: white; text-decoration: underline;">العودة للتطبيق الرئيسي</a>
+                </div>
             </header>
 
             <div class="dashboard-grid">
