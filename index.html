@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كيف حالك اليوم؟</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+
+<body>
+    <div id="app-container" class="mesh-gradient-bg">
+        <header class="main-header">
+            <h1>كيف تشعر اليوم؟</h1>
+            <p>اختر الرمز الذي يعبر عن شعورك</p>
+        </header>
+
+        <main class="emoji-grid" id="emojiGrid">
+            <!-- Emojis will be injected here by JS -->
+        </main>
+
+        <div id="overlay" class="overlay hidden">
+            <div class="message-box">
+                <h2 id="feedbackTitle"></h2>
+                <p id="feedbackText"></p>
+                <button id="resetBtn" onclick="resetApp()">اختيار جديد</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
